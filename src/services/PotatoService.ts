@@ -31,12 +31,12 @@ const getGameContract = () => {
 
 const getPotatoContract = () => {
     const signer = getSigner();
-    console.log(signer)
     const contract = new ethers.Contract(
       NFT_CONTRACT_ADDRESS,
       potatoAbi.abi,
       signer
-    );
+      );
+    console.log(contract)
     return contract;
 }
 
@@ -51,10 +51,12 @@ const purchasePotato = async () => {
     const signer = getSigner();
     const potatoContract = getPotatoContract();
     const gameContract = getGameContract();
+    const signerAddress = await signer.getAddress();
     let tokenId = await potatoContract.tokenOfOwnerByIndex(
-        signer._address,
+        signerAddress,
         0
       )
+    console.log('token id:', tokenId);
     if(tokenId){
         await gameContract.burnNft(tokenId)
     }

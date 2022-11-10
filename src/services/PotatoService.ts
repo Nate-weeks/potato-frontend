@@ -42,7 +42,7 @@ const getPotatoContract = () => {
 
 const purchasePotato = async () => {
     const contract = getGameContract();
-    const tx = await contract.play();
+    const tx = await contract.play({value: ethers.utils.parseEther('0.0001')});
     const receipt = await tx.wait();
     console.log(`attempt to get potato (${receipt.transactionHash})\n`);
   }
@@ -50,15 +50,25 @@ const purchasePotato = async () => {
   const burnPotato = async () => {
     const signer = getSigner();
     const potatoContract = getPotatoContract();
+    const gameContract = getGameContract();
     let tokenId = await potatoContract.tokenOfOwnerByIndex(
         signer._address,
         0
       )
     if(tokenId){
-        // burn it
+        await gameContract.burnNft(tokenId)
     }
-    console.log(`burned nft`);
+    console.log(`burned nft ${tokenId}`);
   }
+
+  const getStats = async () => {
+      const gameContract = getGameContract();
+      let balance = await gameContract.getTotalBalance()
+      let totalNfts = await gameContract.getTotalNFTs()
+      return {"balance": ethers.utils.formatEther(balance), "totalNfts": ethers.utils.formatUnits(totalNfts, 0)}
+  }
+
+
 
 
 
@@ -66,5 +76,7 @@ const purchasePotato = async () => {
       getGameContract,
       getSigner,
       getProvider,
-      purchasePotato
+      purchasePotato,
+      getStats,
+      burnPotato
   }

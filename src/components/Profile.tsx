@@ -1,59 +1,18 @@
 import { Button } from "@mui/material";
 import { useMetaMask } from "metamask-react";
-import { useWeb3 } from "@3rdweb/hooks"
-import { useState } from "react";
  
 function Profile() {
+    const { status, connect, account, chainId, ethereum } = useMetaMask();
 
-    const [currentAccount, setCurrentAccount] = useState("");
-    
+    if (status === "initializing") return <Button style={{borderRadius: "29px"}} variant="contained" size="medium">synchronizing</Button>
 
-    const connectWallet = async () => {
-        try {
-          const {ethereum} = window;
-    
-          if(!ethereum) {
-            alert("Opps, looks like there is no wallet!");
-            return;
-          }
-    
-          const currentNetwork = ethereum.networkVersion;
-          console.log("Current network", currentNetwork);
-    
-          // request to switch the network 
-          try {
-            const tx = await ethereum.request(
-              {
-                method: 'wallet_switchEthereumChain',
-                params:[
-                  {
-                    chainId: '0x5'
-                  }
-                ]
-              }
-            );
-          }
-          catch (tx) {
-            if (tx) {
-              console.log(tx)
-            }
-          }
-                  
-                
-    
-          const accounts = await ethereum.request({ method: "eth_requestAccounts"});
-          setCurrentAccount(accounts[0]); 
-    
-        }
-        catch( error){
-          console.log(error);
-        }
-      }
+    if (status === "unavailable") return <Button style={{borderRadius: "29px"}} variant="contained" size="medium">unavailable</Button>
 
-    if (currentAccount == "") return <Button style={{borderRadius: "29px"}} variant="contained" size="medium" onClick={connectWallet}>Connect Wallet</Button>
+    if (status === "notConnected") return <Button style={{borderRadius: "29px"}} variant="contained" size="medium" onClick={connect}>Connect Wallet</Button>
 
+    if (status === "connecting") return <Button style={{borderRadius: "29px"}} variant="contained" size="medium">Connecting...</Button>
 
-    if (currentAccount != "") return <Button style={{borderRadius: "29px"}} variant="contained" size="medium">Connected</Button>
+    if (status === "connected") return <Button style={{borderRadius: "29px"}} variant="contained" size="medium">Connected</Button>
 
     return null;
 }

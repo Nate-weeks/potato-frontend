@@ -5,17 +5,10 @@ import Container from '@mui/material/Container';
 import potato from './potato.png'
 import { Button } from '@mui/material';
 import Stats from './components/Stats';
-import {purchasePotato} from './services/PotatoService'
-import { ThirdwebWeb3Provider } from "@3rdweb/hooks";
+import {purchasePotato, burnPotato} from './services/PotatoService'
 
 function App() {
-
-  const supportedChainIds = [5];
-
-  const connectors = {
-    injected: {},
-  };
-
+  
   return (
     <div className="App">
       <div style={{height:"40px"}}></div>
@@ -42,7 +35,7 @@ function App() {
           <Button style={{borderRadius: "29px", marginLeft:"3em"}} variant="contained" size="large" color="secondary" onClick={() => purchasePotato()}>Find potato</Button>
         </Grid>
         <Grid item xs={2}>
-          <Button style={{borderRadius: "29px"}} variant="contained" size="large" color="success">Burn potato</Button>
+          <Button style={{borderRadius: "29px"}} variant="contained" size="large" color="success" onClick={() => burnPotato()}>Burn potato</Button>
         </Grid>
 
       </Grid>

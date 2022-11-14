@@ -64,10 +64,13 @@ const purchasePotato = async () => {
   }
 
   const getStats = async () => {
+      const signer = getSigner();
+      const signerAddress = await signer.getAddress();
       const gameContract = getGameContract();
       let balance = await gameContract.getTotalBalance()
       let totalNfts = await gameContract.getTotalNFTs()
-      return {"balance": ethers.utils.formatEther(balance), "totalNfts": ethers.utils.formatUnits(totalNfts, 0)}
+      let userNfts = await gameContract.getAddressNfts(signerAddress)
+      return {"balance": ethers.utils.formatEther(balance), "totalNfts": ethers.utils.formatUnits(totalNfts, 0), "userNfts":ethers.utils.formatUnits(userNfts, 0) }
   }
 
 
